@@ -7,7 +7,7 @@ from pathlib import Path
 st.set_page_config(
     page_title="Employee Attrition Prediction",
     page_icon="📊",
-    layout="wide"
+    layout="centered"
 )
 
 # Load the Model
@@ -17,9 +17,13 @@ MODEL_PATH = BASE_DIR / "models" / "best_model.pkl"
 model = joblib.load(MODEL_PATH)
 
 # Title
-st.title(" 📊 Employee Attrition Prediction")
+st.title("👨‍💼 Employee Attrition Predictor")
 
-st.markdown(""" Predict whether an employee is likely to leave the company using a trained Machine Learning model.""")
+st.caption(
+    "Estimate the likelihood of an employee leaving the company using a trained Machine Learning model."
+)
+
+st.divider()
 
 #Sidebar
 st.sidebar.title("About")
@@ -79,6 +83,8 @@ with col2:
             "Other"
         ]
     )
+
+st.divider()
 
 # Job Information
 st.header("💼 Job Information")
@@ -142,6 +148,8 @@ with col2:
         horizontal=True
     )
 
+st.divider()
+
 # Salary Information
 st.header("💰 Salary Information")
 
@@ -191,6 +199,9 @@ with col2:
         [0,1,2,3],
         horizontal=True
     )
+
+st.divider()
+
 # Experience
 st.header("📈 Experience")
 
@@ -220,7 +231,7 @@ with col1:
     )
 
     distance_from_home = st.number_input(
-        "Distance From Home",
+        "Distance From Home (km)",
         1,
         30,
         5,
@@ -263,6 +274,8 @@ with col2:
         horizontal=True
     )
 
+st.divider()
+
 # Employee Rating
 st.header("⭐ Employee Ratings")
 
@@ -297,8 +310,13 @@ with col2:
         1,4,3
     )
 
+st.divider()
+
 # Predict
-if st.button("Predict"):
+if st.button( 
+     "🔍 Predict Attrition",
+    use_container_width=True
+    ):
 
     input_df = pd.DataFrame({
         "Age": [age],
@@ -346,9 +364,10 @@ if st.button("Predict"):
 
     st.subheader("Prediction Confidence")
 
-    st.write(f"Stay Probability : {probability[0]*100:.2f}%")
+    c1, c2 = st.columns(2)
 
-    st.write(f"Leave Probability : {probability[1]*100:.2f}%")
+    c1.metric("Stay Probability", f"{probability[0]*100:.1f}%")
+    c2.metric("Leave Probability", f"{probability[1]*100:.1f}%")
 
     with st.expander("View Input Data"):
         st.dataframe(input_df)
